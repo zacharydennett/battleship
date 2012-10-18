@@ -8,7 +8,8 @@ import random
 board = []  #Board is a list
 shipLoc = {} # dictonary of ship coordinates
 guess = {"col":0,"row":0} #Will be a set of coordinates in x,y
-turnNumber = 0 # Track the current turn number
+numMiss = 0 # Track the number of misses
+numHits = 0 #Track number of hits
 
 def createBoard(board):
 	## Build Empty 5x5 board
@@ -82,27 +83,44 @@ def getUserGuess(guess):
 	guess["row"] = int(guessRow) - 1
 	guess["col"] = int(guessCol)
 
-def handleGuess(guess, shipLoc,board):
+def handleGuess(guess, shipLoc, board):
 	""" Update the board based on user guess"""
-	r = guess["row"]
-	c = guess["col"]
+	global numMiss
+	global numHits
 	if (guess["row"] == shipLoc["ship_row1"] and guess["col"] == shipLoc["ship_col1"])\
 	or (guess["row"] == shipLoc["ship_row2"] and guess["col"] == shipLoc["ship_col2"]): # Correct guess
+		print "****"
 		print "HIT!"
 		board[guess["row"]][guess["col"]] = "!"
+		numHits += 1
 	else:
+		print "****"
 		print "Miss"
 		board[guess["row"]][guess["col"]] = "-"
+		numMiss += 1
 		
 		
 createBoard(board)
 placeShip(shipLoc)
+
+print "****** WELCOME TO ZACH'S VERSION OF BATTLESHIP ******"
 printBoard(board)
-print shipLoc
+for i in range(0,10): # set to 10 to catch my error when I set a non ending loop
+	getUserGuess(guess)
+	handleGuess(guess, shipLoc, board)
+	printBoard(board)
+	if numMiss > 10:
+		print "You ran out of turns."
+		break
+	if numHits == 2:
+		print "******* WINNER ********"
+		break
+	
+# Show locations
+if numHits != 2:
+	board[shipLoc["ship_row1"]][shipLoc["ship_col1"]] = "!"
+	board[shipLoc["ship_row2"]][shipLoc["ship_col2"]] = "!"
+	printBoard(board)
 
+print "Thanks for playing"
 
-getUserGuess(guess)
-handleGuess(guess, shipLoc, board)
-print guess
-
-printBoard(board)
