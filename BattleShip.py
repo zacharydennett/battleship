@@ -4,9 +4,11 @@
 
 import random
 
+# Global variables
 board = []  #Board is a list
 shipLoc = {} # dictonary of ship coordinates
 guess = {"col":0,"row":0} #Will be a set of coordinates in x,y
+turnNumber = 0 # Track the current turn number
 
 def createBoard(board):
 	## Build Empty 5x5 board
@@ -80,10 +82,27 @@ def getUserGuess(guess):
 	guess["row"] = int(guessRow) - 1
 	guess["col"] = int(guessCol)
 
-
+def handleGuess(guess, shipLoc,board):
+	""" Update the board based on user guess"""
+	r = guess["row"]
+	c = guess["col"]
+	if (guess["row"] == shipLoc["ship_row1"] and guess["col"] == shipLoc["ship_col1"])\
+	or (guess["row"] == shipLoc["ship_row2"] and guess["col"] == shipLoc["ship_col2"]): # Correct guess
+		print "HIT!"
+		board[guess["row"]][guess["col"]] = "!"
+	else:
+		print "Miss"
+		board[guess["row"]][guess["col"]] = "-"
+		
+		
 createBoard(board)
 placeShip(shipLoc)
 printBoard(board)
-getUserGuess(guess)
-print guess
 print shipLoc
+
+
+getUserGuess(guess)
+handleGuess(guess, shipLoc, board)
+print guess
+
+printBoard(board)
